@@ -1,0 +1,13 @@
+first:
+    type: book
+    title: Some First Book
+    author: Paul Adam, Surname Name
+
+second:
+    type: book
+    title: Some Second Book
+    author: Surname Name
+third:
+    type: book
+    title: Some Third Book
+    author: Surname Name, Other Name
