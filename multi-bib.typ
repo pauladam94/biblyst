@@ -9,7 +9,7 @@
     let file = yaml(path)
 
     let done = ()
-    text(underline[*Bibliographie* #linebreak()])
+    text(underline[*Bibliography* #linebreak()])
     let resume_author(author) = {
       let l = author.split(" ").filter(x=>x != "")
       l.enumerate().map(((i, name)) => 

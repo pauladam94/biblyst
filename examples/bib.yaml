@@ -2,7 +2,6 @@ first:
     type: book
     title: Some First Book
     author: Paul Adam, Surname Name
-
 second:
     type: book
     title: Some Second Book
