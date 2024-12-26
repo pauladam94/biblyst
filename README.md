@@ -1,22 +1,17 @@
-# multi-bib
-Typst multiple bibliographie using same citation an bibliographie syntax.
+# Multiple Bibliography
+This Typst package allow multiple bibliographie using the build-in typst syntax
+fonction for citation an bibliography.
 
-# Why this package ?
-This package tries to resolve the missing feature of importing multiple
-bibliogrphies in typst.
-
-This has already been discussed in multiple issues and in the typst forum here :
-- 
--
-- 
 
 # Working example
 
 Here is a basic example :
 
-The bibliographie file in yaml :
+Here is the code, one bibliography file and two chapter that are included in a
+main file.
 
 ```yaml
+# bib.yaml
 first:
     type: book
     title: Some Book
@@ -30,11 +25,16 @@ Here the two chapter (we can imagine that there very long chapter and you want
 multiple bibliography).
 
 
-Here the result :
-![](examples/main_1.svg)
-![](examples/main_2.svg)
-![](examples/main_3.svg)
-![](examples/main_4.svg)
+Here the result : ![](examples/main_1.svg) ![](examples/main_2.svg) ![](examples/main_3.svg) ![](examples/main_4.svg)
+
+
+# Why this package ?
+This package tries to resolve the missing feature of importing multiple
+bibliogrphies in typst.
+
+This has already been discussed in multiple issues and in the typst community :
+- [Github feature request](https://github.com/typst/typst/issues/1097)
+- [Typst forum multi file setup question](https://forum.typst.app/t/how-to-share-bibliography-in-a-multi-file-setup/1605)
 
 # How it works
 - The citation function is also overriden. I add a `label` and a `metadata` to
