@@ -50,6 +50,9 @@ third:
 #bibliography("../examples/bib.yaml")
 ```
 
+
+![](examples/main.typ)
+
 ```typ
 // main.typ
 #import "../multi-bib.typ" : multi-bib
@@ -72,11 +75,15 @@ third:
 Here the two chapter (we can imagine that there are very long chapter and you
 want multiple bibliography in multiple files).
 
-Here is the result :
+Here is the result of the compilation of the main.typ file. (the one in the
+repository).
 
 ![](examples/main_1.svg)
+
 ![](examples/main_2.svg)
+
 ![](examples/main_3.svg)
+
 ![](examples/main_4.svg)
 
 # Why this package ?
@@ -143,7 +150,14 @@ mainly parses the yaml file,
 Here is the show rules to make this works. This is pretty short and thus can be
 copied easily in your template to make it work as you want.
 
+![](multi-bib.typ)
 ```typ
+// counter update for each citation (id of the citation)
+#let cite_counter = counter("cite_counter")
+// counter that update for each document (has to be increased in a template
+// document for example) (id of the document)
+#let global_counter = counter("global_counter")
+
 #show bibliography: it => {
     if it.path.len() != 1 { assert(false, message: "Only accepts one bibliography file") }
 
@@ -152,18 +166,26 @@ copied easily in your template to make it work as you want.
 
     let done = ()
     text(underline[*Bibliography* #linebreak()])
+    // function that take and author (ie. "Tom Paul Andersen")
+    // and turn it into a resume version T. P. Andersen
     let resume_author(author) = {
       let l = author.split(" ").filter(x=>x != "")
       l.enumerate().map(((i, name)) => 
         if i != l.len() - 1 [#name.slice(0,1).]
         else {name}).join(" ")
     }
+    // Go through all of the citation in the current document
+    // current document being the one identified with the number inside the 
+    // counter "global_counter"
     for i in range(cite_counter.get().at(0)) {
       let lab = label("cite_" + str(i) + "_" + global_counter.display())
       let pos = locate(lab).position()
       let item = query(lab).at(0).value
-      if not item in done {
+      if not item in done { // only write once each document (book, article...)
         if item in file {
+          // specific code for typeset a basic book bibliography
+          // Other type of citation can be taken into account and it must be
+          // done by scripting here in typst
           let book = file.at(item)
           let a = book.author
           let type_author = type(a)
@@ -184,9 +206,11 @@ copied easily in your template to make it work as you want.
 }
 #show cite : it => [
     [#str(it.key)#if it.supplement != none [ #it.supplement]]
-    #metadata(str(it.key))
+    #metadata(str(it.key)) // Metadata of the key used by the citation
     #label("cite_" + cite_counter.display() + "_" + global_counter.display())
     #cite_counter.step()
+    // Here we have added a label connected to the citation metadata just to
+    // know what have been cited in the document
 ]
 ```
 </details>
