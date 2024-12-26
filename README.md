@@ -50,9 +50,6 @@ third:
 #bibliography("../examples/bib.yaml")
 ```
 
-
-![](examples/main.typ)
-
 ```typ
 // main.typ
 #import "../multi-bib.typ" : multi-bib
@@ -150,7 +147,6 @@ mainly parses the yaml file,
 Here is the show rules to make this works. This is pretty short and thus can be
 copied easily in your template to make it work as you want.
 
-![](multi-bib.typ)
 ```typ
 // counter update for each citation (id of the citation)
 #let cite_counter = counter("cite_counter")
