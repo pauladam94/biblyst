@@ -87,6 +87,11 @@ This has already been discussed in multiple issues and in the typst community :
 - [Github feature request](https://github.com/typst/typst/issues/1097)
 - [Typst forum multi file setup question](https://forum.typst.app/t/how-to-share-bibliography-in-a-multi-file-setup/1605)
 
+This package is not feature full but the code is very simple. This kind of issue
+with bibliography usually occurs with big document (a thesis document for
+example) where I assumed people have some form of custom template. The idea is
+to take the code of this package and adapt it to your liking.
+
 # Benefits and Drawbacks
 ## Benefits
 ### Allow easy customization of citation and bibliography
@@ -139,8 +144,7 @@ Here is the show rules to make this works. This is pretty short and thus can be
 copied easily in your template to make it work as you want.
 
 ```typ
-#{
-show bibliography: it => {
+#show bibliography: it => {
     if it.path.len() != 1 { assert(false, message: "Only accepts one bibliography file") }
 
     let path = "examples/bib.yaml"
@@ -178,16 +182,35 @@ show bibliography: it => {
       done.push(item)
     }
 }
-show cite : it => [
+#show cite : it => [
     [#str(it.key)#if it.supplement != none [ #it.supplement]]
     #metadata(str(it.key))
     #label("cite_" + cite_counter.display() + "_" + global_counter.display())
     #cite_counter.step()
 ]
-}
+```
+</details>
+
+# Using it as a package only
+Warning: this package is not feature full and only support books with a title
+and some authors.
+
+If you want more support, go see the contributing part or copy past the code.
+
+Warning: This has not be well tested yet.
+```typ
+// file.typ
+#import "@preview/biblyst:0.1.0" : multi-bib
+#show: multi-bib
+
+// ... some document
+@some-citation-name
+
+#bibliography("path-to-bibliography-in-yaml-format")
 ```
 
-</details>
+`file.typ` can now be included in a file, even a file with it's own
+bibliography, even a file that has other bibliography from other files.
 
 
 # Contributing
