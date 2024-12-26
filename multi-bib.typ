@@ -46,7 +46,6 @@
     #label("cite_" + cite_counter.display() + "_" + global_counter.display())
     #cite_counter.step()
   ]
-
   body
 }
 

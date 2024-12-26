@@ -93,8 +93,12 @@ This has already been discussed in multiple issues and in the typst community :
 - this allows complete customization (in typst and not a citation language) over
 how citate are showed and customization of the bibliographie. This is the first
 reason why I have written this. For writing (non verified) scientific paper, I
-want to have custom citation and bibliography that are very clear (not the cutom
-\[1\] \[2\] citation).
+want to have custom citation and bibliography that are very clear (not the usual
+\[1\] \[2\] citation style of IEEE). In this package, the citation are seen as
+the same name as they are called in the typst file. If you write @PAT then you
+will see \[PAT\] in the file and in the bibliography at the end there will be
+\[PAT\] at the end. This works only if there is an element in the `yaml`
+bibliography named "PAT".
 
 ## Drawbacks
 ### Predefined bibliography style not supported
@@ -128,9 +132,62 @@ be able to reference the citation in the bibliography.
   has done previously, none of its parameter are taken into account either. It
 mainly parses the yaml file, 
 
+<details>
+    <summary> Show Code </summary>
 
-Here is an extract of the show rules to make this works. This is pretty short
-and thus can be copied easily in your template to make it work as you want.
+Here is the show rules to make this works. This is pretty short and thus can be
+copied easily in your template to make it work as you want.
+
+```typ
+#{
+show bibliography: it => {
+    if it.path.len() != 1 { assert(false, message: "Only accepts one bibliography file") }
+
+    let path = "examples/bib.yaml"
+    let file = yaml(path)
+
+    let done = ()
+    text(underline[*Bibliography* #linebreak()])
+    let resume_author(author) = {
+      let l = author.split(" ").filter(x=>x != "")
+      l.enumerate().map(((i, name)) => 
+        if i != l.len() - 1 [#name.slice(0,1).]
+        else {name}).join(" ")
+    }
+    for i in range(cite_counter.get().at(0)) {
+      let lab = label("cite_" + str(i) + "_" + global_counter.display())
+      let pos = locate(lab).position()
+      let item = query(lab).at(0).value
+      if not item in done {
+        if item in file {
+          let book = file.at(item)
+          let a = book.author
+          let type_author = type(a)
+          let authors
+          if type(book.author) == array {
+            authors = book.author
+          } else if type(book.author) == str {
+            authors = book.author.split(",")
+          }
+          let resume_authors = authors.map(a => resume_author(a)).join(" & ")
+          [#h(0.8em) [#item]#h(0.5em)#resume_authors, #emph(book.title). #linebreak()]
+        } else {
+          assert(false, message:[#item not in #it.path.at(0)])
+        }
+      }
+      done.push(item)
+    }
+}
+show cite : it => [
+    [#str(it.key)#if it.supplement != none [ #it.supplement]]
+    #metadata(str(it.key))
+    #label("cite_" + cite_counter.display() + "_" + global_counter.display())
+    #cite_counter.step()
+]
+}
+```
+
+</details>
 
 
 # Contributing
